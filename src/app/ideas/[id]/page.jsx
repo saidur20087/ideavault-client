@@ -35,7 +35,7 @@ const IdeaDetailsPage = () => {
       try {
         setLoading(true);
 
-        const res = await fetch(`http://localhost:5000/api/ideas/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas/${id}`);
         const data = await res.json();
 
         setIdea(data.idea);
@@ -66,7 +66,7 @@ const IdeaDetailsPage = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/ideas/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas/${id}`, {
         method: "DELETE",
       });
 
@@ -113,7 +113,7 @@ const IdeaDetailsPage = () => {
   const handleDeleteComment = async (index) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/ideas/${id}/comment/${index}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas/${id}/comment/${index}`,
         {
           method: "DELETE",
         }
