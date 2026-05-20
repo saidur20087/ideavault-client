@@ -87,8 +87,7 @@ const IdeaDetailsPage = () => {
     if (!comment.trim()) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/ideas/${id}/comment`,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas/${id}/comment`,
         {
           method: "POST",
           headers: {
@@ -138,7 +137,7 @@ const IdeaDetailsPage = () => {
   const handleEditSave = async (index) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/ideas/${id}/comment/edit`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas/${id}/comment/edit`,
         {
           method: "PUT",
           headers: {

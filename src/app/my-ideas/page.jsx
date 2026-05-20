@@ -12,7 +12,7 @@ const MyIdeaPage = () => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:5000/api/ideas");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas`);
       const data = await res.json();
 
       setIdeas(data.ideas || []);
@@ -34,7 +34,7 @@ const MyIdeaPage = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/ideas/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas/${id}`, {
         method: "DELETE",
       });
 

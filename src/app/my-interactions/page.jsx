@@ -11,10 +11,10 @@ const MyInteractions = () => {
         try {
             setLoading(true);
 
-            const res = await fetch("http://localhost:5000/api/interactions");
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/interactions`);
             const result = await res.json();
 
-            // ⚠️ FIX: backend might return array directly OR {success, data}
+            
             setData(Array.isArray(result) ? result : result.data || []);
         } catch (err) {
             console.error("Error fetching interactions:", err);
@@ -38,7 +38,7 @@ const MyInteractions = () => {
     const handleDelete = async (index) => {
         try {
             const res = await fetch(
-                "http://localhost:5000/api/interactions/delete",
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/interactions/delete`,
                 {
                     method: "DELETE",
                     headers: {

@@ -23,7 +23,7 @@ const IdeasPage = () => {
       try {
         setLoading(true);
 
-        const res = await fetch("http://localhost:5000/api/ideas");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas`);
         const data = await res.json();
 
         console.log("RAW API DATA:", data);

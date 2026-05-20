@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 
-const LoginPage = () => {
+
+const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -20,9 +21,7 @@ const LoginPage = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // =========================
   // EMAIL LOGIN
-  // =========================
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -35,30 +34,18 @@ const LoginPage = () => {
         password,
         callbackURL: redirectPath,
       });
-      console.log(redirectPath)
 
-      const authError = res?.error;
-
-      if (authError) {
-        setError(authError.message || "Login failed");
-        toast.error(authError.message || "Login failed");
+      if (res?.error) {
+        setError(res.error.message || "Login failed");
+        toast.error(res.error.message || "Login failed");
         return;
       }
 
-     toast.success("Login successful!", {
-  duration: 1200,
-});
-
-setTimeout(() => {
-  router.push(redirectPath); 
-}, 1200);
-
-
-      setTimeout(() => {
-        router.push(redirectPath);
-      }, 1000);
+      toast.success("Login successful!");
+      router.push(redirectPath);
 
     } catch (err) {
+      console.error("Login error:", err);
       setError("Something went wrong");
       toast.error("Login failed");
     } finally {
@@ -66,34 +53,26 @@ setTimeout(() => {
     }
   };
 
-  // =========================
   // GOOGLE LOGIN
-  // =========================
   const handleGoogleLogin = async () => {
     try {
       setGoogleLoading(true);
-
-      toast.loading("Redirecting to Google...");
 
       await authClient.signIn.social({
         provider: "google",
         callbackURL: redirectPath,
       });
 
-      console.log(redirectPath)
-
-    
     } catch (err) {
+      console.error("Google login error:", err);
       toast.error("Google login failed");
     } finally {
       setGoogleLoading(false);
-      toast.dismiss();
     }
   };
 
   return (
     <div className="min-h-[calc(100vh-4.5rem)] mt-4 flex items-center justify-center bg-white dark:bg-[#0b0f19] text-gray-900 dark:text-gray-100 px-4 sm:px-6 md:px-10 py-8 relative overflow-hidden">
-
       <Toaster position="top-center" />
 
       {/* BACKGROUND */}
@@ -105,15 +84,11 @@ setTimeout(() => {
 
         {/* HEADER */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold">
-            Welcome Back
-          </h2>
-          <p className="text-sm text-gray-500 mt-2">
-            Login to continue
-          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold">Welcome Back</h2>
+          <p className="text-sm text-gray-500 mt-2">Login to continue</p>
         </div>
 
-        {/* GOOGLE BUTTON */}
+        {/* GOOGLE LOGIN */}
         <button
           onClick={handleGoogleLogin}
           disabled={googleLoading}
@@ -122,7 +97,6 @@ setTimeout(() => {
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l3.227-3.103C18.435 1.21 15.62 0 12.24 0c-6.63 0-12 5.37-12 12s5.37 12 12 12c6.923 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"/>
           </svg>
-
           {googleLoading ? "Redirecting..." : "Continue with Google"}
         </button>
 
@@ -135,7 +109,6 @@ setTimeout(() => {
 
         {/* FORM */}
         <form onSubmit={handleEmailLogin} className="space-y-4">
-
           {/* EMAIL */}
           <InputField
             icon={<Mail size={18} />}
@@ -157,9 +130,7 @@ setTimeout(() => {
           />
 
           {/* ERROR */}
-          {error && (
-            <p className="text-red-500 text-xs">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-xs">{error}</p>}
 
           {/* SUBMIT */}
           <button
@@ -170,7 +141,6 @@ setTimeout(() => {
             {loading ? "Logging in..." : "Sign In"}
             <ArrowRight size={16} />
           </button>
-
         </form>
 
         {/* FOOTER */}
@@ -186,21 +156,28 @@ setTimeout(() => {
   );
 };
 
-export default LoginPage;
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0b0f19]">
+        <p className="text-gray-500 text-sm">Loading login form...</p>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+}
 
 /* INPUT COMPONENT */
 function InputField({ icon, label, ...props }) {
   return (
     <div>
-      <label className="block text-sm mb-1 font-medium">
-        {label}
-      </label>
-
+      <label className="block text-sm mb-1 font-medium">{label}</label>
       <div className="relative">
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
           {icon}
         </span>
-
         <input
           {...props}
           className="w-full pl-10 pr-4 py-3 rounded-xl border bg-white dark:bg-[#0b0f19] text-sm focus:outline-none"
