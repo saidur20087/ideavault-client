@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { FaGoogle } from "react-icons/fa";
 
 
 const LoginForm = () => {
@@ -94,9 +95,7 @@ const LoginForm = () => {
           disabled={googleLoading}
           className="w-full flex items-center justify-center gap-3 py-3 border rounded-xl bg-white dark:bg-[#0b0f19] text-sm font-medium disabled:opacity-50"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
-            <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l3.227-3.103C18.435 1.21 15.62 0 12.24 0c-6.63 0-12 5.37-12 12s5.37 12 12 12c6.923 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"/>
-          </svg>
+          <FaGoogle size={20} className="text-red-600" />
           {googleLoading ? "Redirecting..." : "Continue with Google"}
         </button>
 
