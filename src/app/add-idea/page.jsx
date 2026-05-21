@@ -16,16 +16,18 @@ const AddIdeaPage = () => {
     const description = form.description.value;
     const targetAudience = form.targetAudience.value;
 
-  
+
     const newIdea = {
       title,
       category,
       description,
       targetAudience,
+      userEmail: user?.email,
+      userName: user?.name,
     };
 
     try {
-     
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/ideas`, {
         method: 'POST',
         headers: {
@@ -37,11 +39,11 @@ const AddIdeaPage = () => {
       const data = await res.json();
 
       if (data.success) {
-     
-        console.log("Idea Created Successfully!"); 
-        
+
+        console.log("Idea Created Successfully!");
+
         form.reset();
-        router.push('/ideas'); 
+        router.push('/ideas');
       }
     } catch (error) {
       console.error("Error creating idea:", error);
@@ -53,7 +55,7 @@ const AddIdeaPage = () => {
   return (
     <div className="max-w-2xl mx-auto my-12 p-8 bg-white dark:bg-[#131926]/40 border rounded-2xl shadow-sm">
       <h2 className="text-3xl font-bold mb-6">Submit Your Startup Idea</h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block text-sm font-semibold mb-2">Idea Title</label>
